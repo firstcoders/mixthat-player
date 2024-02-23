@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        background: #fafafa;
+        --stemplayer-js-color: red;
+        --stemplayer-js-font-family: 'Arial Narrow';
+        --stemplayer-js-font-size: 0.9rem;
+        --stemplayer-js-background-color: white;
+        --stemplayer-js-wave-color: pink;
+        --stemplayer-js-wave-progress-color: purple;
+        --stemplayer-js-wave-pixel-ratio: 2;
+        --stemplayer-js-wave-bar-gap: 0;
+        --stemplayer-js-waveform-bar-width: 1;
+        --stemplayer-js-controls-color: black;
+        --stemplayer-js-controls-background-color: red;
+        --stemplayer-js-controls-wave-color: black;
+        --stemplayer-js-controls-wave-progress-color: lightblue;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div id="demo"></div>
+
+    <script type="module">
+      import { html, render } from 'lit';
+      import '../mixthat-player.js';
+
+      const src =
+        'https://d18906zu98mq5t.cloudfront.net/tracks/538b8d03-bdb8-4f69-8063-47c57c7ad335/stream';
+
+      const createMix = async () => {
+        const { url } = await document
+          .querySelector('mixthat-player')
+          .createMix('wav');
+
+        window.location.replace(url);
+      };
+
+      render(
+        html`<mixthat-player controls .src=${src}></mixthat-player>
+          <button @click=${createMix}>Save as WAV</button>`,
+        document.querySelector('#demo')
+      );
+    </script>
+
+
+  </body>
+</html>
