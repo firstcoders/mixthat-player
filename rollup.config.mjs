@@ -39,7 +39,7 @@ export default [
     },
     output: [
       {
-        file: 'dist/mixthat-player.mjs',
+        file: 'dist/mixthat-player.js',
         format: 'es',
         sourcemap: true,
       },
@@ -75,7 +75,7 @@ export default [
     },
     output: [
       {
-        file: 'dist/mixthat-player-bundle.mjs',
+        file: 'dist/mixthat-player-bundle.js',
         format: 'es',
         sourcemap: true,
       },

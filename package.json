@@ -17,7 +17,8 @@
   },
   "exports": {
     ".": "./index.js",
-    "./mixthat-player.js": "./mixthat-player.js"
+    "./mixthat-player.js": "./mixthat-player.js",
+    "./mixthat-player-bundle.js": "./dist/mixthat-player-bundle.js"
   },
   "scripts": {
     "analyze": "cem analyze --litelement",
