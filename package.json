@@ -65,9 +65,5 @@
       "eslint --fix",
       "prettier --write"
     ]
-  },
-  "files": [
-    "dist",
-    "src"
-  ]
+  }
 }
