@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.2-beta.0](https://github.com/sound-ws/mixthat-player/compare/@soundws/mixthat-player@3.1.1...@soundws/mixthat-player@3.1.2-beta.0) (2024-03-06)
+
+
+### Bug Fixes
+
+* **mixthat-player:** tweaks rendering ([bfc2802](https://github.com/sound-ws/mixthat-player/commit/bfc28024f387299332b85ffc53f3ec0956c68c6a))
+
+
+
+
+
 ## [3.1.1](https://github.com/sound-ws/mixthat-player/compare/@soundws/mixthat-player@3.1.1-beta.0...@soundws/mixthat-player@3.1.1) (2024-03-01)
 
 **Note:** Version bump only for package @soundws/mixthat-player
