@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import '@stemplayer-js/stemplayer-js/stemplayer.js';
 import { MixthatPlayer } from './src/MixthatPlayer.js';
 
 window.customElements.define('mixthat-player', MixthatPlayer);

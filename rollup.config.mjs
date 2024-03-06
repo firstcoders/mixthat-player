@@ -2,6 +2,34 @@ import resolve from '@rollup/plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
 import filesize from 'rollup-plugin-filesize';
 import minifyHTML from 'rollup-plugin-minify-html-literals';
+import license from 'rollup-plugin-license';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+const licenseConfig = {
+  sourcemap: true,
+  cwd: process.cwd(), // The default
+
+  banner: {
+    commentStyle: 'regular', // The default
+
+    content: {
+      file: join(__dirname, 'COPYRIGHT'),
+      encoding: 'utf-8', // Default is utf-8
+    },
+  },
+
+  thirdParty: {
+    includePrivate: true, // Default is false.
+    multipleVersions: true, // Default is false.
+    output: {
+      file: join(__dirname, 'dist', 'dependencies.txt'),
+      encoding: 'utf-8', // Default is utf-8.
+    },
+  },
+};
 
 export default [
   {
@@ -11,7 +39,7 @@ export default [
     },
     output: [
       {
-        file: 'dist/mixthat-player-lean.mjs',
+        file: 'dist/mixthat-player.mjs',
         format: 'es',
         sourcemap: true,
       },
@@ -35,18 +63,19 @@ export default [
             }),
           ]
         : []),
+      license(licenseConfig),
     ],
     preserveEntrySignatures: 'strict',
   },
 
   {
-    input: 'mixthat-player.js',
+    input: 'mixthat-player-bundle.js',
     watch: {
       include: 'src/**',
     },
     output: [
       {
-        file: 'dist/mixthat-player.mjs',
+        file: 'dist/mixthat-player-bundle.mjs',
         format: 'es',
         sourcemap: true,
       },
@@ -69,6 +98,7 @@ export default [
             }),
           ]
         : []),
+      license(licenseConfig),
     ],
     preserveEntrySignatures: 'strict',
   },
