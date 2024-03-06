@@ -27,10 +27,11 @@
 
     <script type="module">
       import { html, render } from 'lit';
+      import '@stemplayer-js/stemplayer-js/stemplayer.js';
       import '../mixthat-player.js';
 
       const src =
-        'https://d18906zu98mq5t.cloudfront.net/tracks/538b8d03-bdb8-4f69-8063-47c57c7ad335/stream';
+        'https://d18906zu98mq5t.cloudfront.net/tracks/a26fab52-d905-4c6a-9699-8af03a9ca31f/stream?t=1709625601931';
 
       const createMix = async () => {
         const { url } = await document
@@ -41,7 +42,7 @@
       };
 
       render(
-        html`<mixthat-player controls .src=${src}></mixthat-player>
+        html`<mixthat-player collapsed controls .src=${src}></mixthat-player>
           <button @click=${createMix}>Save as WAV</button>`,
         document.querySelector('#demo')
       );

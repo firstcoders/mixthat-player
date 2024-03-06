@@ -1,18 +1,28 @@
 import { html, css, LitElement } from 'lit';
+import gridStyles from '@soundws/element-styles/grid.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 export class MixthatPlayer extends LitElement {
-  static styles = css`
-    :host {
-      display: block;
-    }
-    a.backlink {
-      position: absolute;
-      right: 0;
-      bottom: 0;
-      color: var(--sws-stemsplayer-stem-color, --sws-stemsplayer-color);
-    }
-  `;
+  static styles = [
+    gridStyles,
+    css`
+      :host {
+        display: block;
+      }
+      a.backlink {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        color: var(--sws-stemsplayer-stem-color, --sws-stemsplayer-color);
+        font-size: 0.8rem;
+        opacity: 0.5;
+        text-align: center;
+      }
+      .alignRight {
+        text-align: right;
+      }
+    `,
+  ];
 
   static properties = {
     src: { type: String },
@@ -20,8 +30,25 @@ export class MixthatPlayer extends LitElement {
     isLoading: { type: Boolean },
     isError: { type: Boolean },
     maxHeight: { attribute: 'max-height' },
-    controls: { type: Boolean },
+    controls: {
+      type: String,
+      converter: {
+        fromAttribute: value => {
+          if (value === '') {
+            return 'controls';
+          }
+          return value;
+        },
+      },
+    },
+    collapsed: { type: Boolean },
+    _isCreatingMix: { state: true },
   };
+
+  constructor() {
+    super();
+    this.controls = '';
+  }
 
   connectedCallback() {
     super.connectedCallback();
@@ -75,37 +102,71 @@ export class MixthatPlayer extends LitElement {
   }
 
   render() {
-    return html`
-      ${this.track
-        ? html`<stemplayer-js max-height=${ifDefined(this.maxHeight)}>
-            ${this.controls
-              ? html`<stemplayer-js-controls
-                  slot="header"
-                  label="${this.track.songTitle || 'No title'}"
-                ></stemplayer-js-controls>`
-              : ''}
-            ${this.track.stems.map(
-              stem =>
-                html`<stemplayer-js-stem
-                  .id=${stem.uploaduuid}
-                  label="${stem.label}"
-                  src="${this.canPlayOgg ? stem['hls:ogg'] : stem['hls:mp3']}"
-                  waveform="${stem.waveform}"
-                >
-                </stemplayer-js-stem>`,
-            )}
-            <a
-              slot="footer"
-              class="backlink"
-              target="blank"
-              href="${this.track.webUrl}${this.authToken
-                ? `?authToken=${this.authToken}`
-                : ''}"
-              >MixThat</a
-            >
-          </stemplayer-js>`
-        : ''}
-    `;
+    return this.track
+      ? html`<stemplayer-js max-height=${ifDefined(this.maxHeight)}>
+          ${this.controls || this.collapsed !== undefined
+            ? html`<stemplayer-js-controls
+                slot="header"
+                label="${this.track.songTitle}"
+              >
+                ${this.controls.indexOf('stems') !== -1
+                  ? html`<soundws-player-button
+                      slot="end"
+                      @click=${() => {
+                        this.collapsed = !this.collapsed;
+                      }}
+                      class="w2"
+                      title="Mix Stems"
+                      type="mix"
+                    ></soundws-player-button>`
+                  : ''}
+                ${this.controls.indexOf('download:mix') !== -1
+                  ? html`<soundws-player-button
+                      @click=${() => this.createMix('wav')}
+                      .disabled=${this.collapsed || this._isCreatingMix}
+                      slot="end"
+                      class="w2"
+                      title="Download Mix"
+                      .type="${!this._isCreatingMix
+                        ? 'download'
+                        : 'downloading'}"
+                    ></soundws-player-button>`
+                  : ''}
+              </stemplayer-js-controls>`
+            : ''}
+          <!-- hidden stem element that represents mixed audio -->
+          ${this.collapsed
+            ? html`<stemplayer-js-stem
+                .id=${this.track.trackuuid}
+                .src="${this.canPlayOgg
+                  ? this.track.audio?.['hls:ogg']
+                  : this.track.audio?.['hls:mp3']}"
+                .waveform="${this.track.audio?.waveform}"
+                style="visibility:hidden;height:0;"
+              >
+              </stemplayer-js-stem>`
+            : html`${this.track.stems.map(
+                stem =>
+                  html`<stemplayer-js-stem
+                    .id=${stem.uploaduuid}
+                    label="${stem.label}"
+                    src="${this.canPlayOgg ? stem['hls:ogg'] : stem['hls:mp3']}"
+                    waveform="${stem.waveform}"
+                  >
+                    <div class="${this.#paddingEndStems}" slot="end"></div
+                  ></stemplayer-js-stem>`,
+              )}`}
+
+          <a
+            class="backlink w2"
+            target="blank"
+            href="${this.track.webUrl}${this.authToken
+              ? `?authToken=${this.authToken}`
+              : ''}"
+            >MixThat</a
+          >
+        </stemplayer-js>`
+      : '';
   }
 
   async createMix(format) {
@@ -113,30 +174,37 @@ export class MixthatPlayer extends LitElement {
 
     const { state } = this.player;
 
-    const response = await fetch(this.track.downloadMixUrl, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        ...(this.authToken
-          ? { Authorization: `Bearer ${this.authToken}` }
-          : {}),
-      },
-      body: JSON.stringify({
-        format,
-        stems: state.stems.map(({ id, volume }) => ({
-          id,
-          volume,
-        })),
-      }),
-    });
+    try {
+      this._isCreatingMix = true;
 
-    if (response.ok) {
+      const response = await fetch(this.track.downloadMixUrl, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          ...(this.authToken
+            ? { Authorization: `Bearer ${this.authToken}` }
+            : {}),
+        },
+        body: JSON.stringify({
+          format,
+          stems: state.stems.map(({ id, volume }) => ({
+            id,
+            volume,
+          })),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to Create Mix');
+      }
       const { _url } = await response.json();
-      return this.poll(_url);
-    }
+      const { url } = await this.poll(_url);
 
-    throw new Error('Failed to Create Mix');
+      this.dispatchEvent(new CustomEvent('mix:ready', { detail: { url } }));
+    } finally {
+      this._isCreatingMix = false;
+    }
   }
 
   /**
@@ -194,5 +262,14 @@ export class MixthatPlayer extends LitElement {
     return new URL(this.src).pathname
       .replace(/\/?tracks\//, '')
       .replace(/\/stream\/?/, '');
+  }
+
+  get #paddingEndStems() {
+    const numberOfControlButtons =
+      this.controls
+        .split(' ')
+        .map(x => x.trim())
+        .filter(x => ['stems', 'download:mix'].indexOf(x) !== -1).length || 1;
+    return `w${numberOfControlButtons * 2}`;
   }
 }
