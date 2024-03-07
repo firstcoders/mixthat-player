@@ -283,12 +283,11 @@ export class MixthatPlayer extends LitElement {
   }
 
   get #paddingEndStems() {
-    const numberOfControlButtons =
-      this.controls
-        .split(' ')
-        .map(x => x.trim())
-        .filter(x => ['toggle:stems', 'download:mix'].indexOf(x) !== -1)
-        .length || 1;
-    return `w${numberOfControlButtons * 2}`;
+    const numberOfControlButtons = this.controls
+      .split(' ')
+      .map(x => x.trim())
+      .filter(x => ['toggle:stems', 'download:mix'].indexOf(x) !== -1).length;
+
+    return numberOfControlButtons > 0 ? `w${numberOfControlButtons * 2}` : '';
   }
 }
