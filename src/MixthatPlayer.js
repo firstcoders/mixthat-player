@@ -16,10 +16,12 @@
  */
 import { html, css, LitElement } from 'lit';
 import gridStyles from '@soundws/element-styles/grid.js';
+import animationStyles from '@soundws/element-styles/animate.js';
 
 export class MixthatPlayer extends LitElement {
   static styles = [
     gridStyles,
+    animationStyles,
     css`
       :host {
         display: block;
@@ -56,16 +58,16 @@ export class MixthatPlayer extends LitElement {
       },
     },
     collapsed: { type: Boolean },
+    noAnalytics: { type: Boolean },
     _isCreatingMix: { state: true },
   };
 
   constructor() {
     super();
     this.controls = '';
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
+    this.addEventListener('mix:ready', e => {
+      window.location.replace(e.detail.url);
+    });
   }
 
   set src(src) {
@@ -139,7 +141,7 @@ export class MixthatPlayer extends LitElement {
                       @click=${() => this.createMix('wav')}
                       .disabled=${this.collapsed || this._isCreatingMix}
                       slot="end"
-                      class="w2"
+                      class="w2${this._isCreatingMix ? ' animate pulse' : ''}"
                       title="Download Mix"
                       .type="${!this._isCreatingMix
                         ? 'download'
@@ -261,15 +263,17 @@ export class MixthatPlayer extends LitElement {
   }
 
   record(event, data) {
-    setTimeout(() => {
-      fetch(`${new URL(this.src).origin}/activity`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ event, timestamp: Date.now(), data }),
-      });
-    }, 1000);
+    if (!this.noAnalytics) {
+      setTimeout(() => {
+        fetch(`${new URL(this.src).origin}/activity`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ event, timestamp: Date.now(), data }),
+        });
+      }, 1000);
+    }
   }
 
   get trackuuid() {
@@ -283,7 +287,8 @@ export class MixthatPlayer extends LitElement {
       this.controls
         .split(' ')
         .map(x => x.trim())
-        .filter(x => ['stems', 'download:mix'].indexOf(x) !== -1).length || 1;
+        .filter(x => ['toggle:stems', 'download:mix'].indexOf(x) !== -1)
+        .length || 1;
     return `w${numberOfControlButtons * 2}`;
   }
 }
