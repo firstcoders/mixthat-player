@@ -16,7 +16,6 @@
  */
 import { html, css, LitElement } from 'lit';
 import gridStyles from '@soundws/element-styles/grid.js';
-import { ifDefined } from 'lit/directives/if-defined.js';
 
 export class MixthatPlayer extends LitElement {
   static styles = [
@@ -45,7 +44,6 @@ export class MixthatPlayer extends LitElement {
     track: { type: Object },
     isLoading: { type: Boolean },
     isError: { type: Boolean },
-    maxHeight: { attribute: 'max-height' },
     controls: {
       type: String,
       converter: {
@@ -119,7 +117,7 @@ export class MixthatPlayer extends LitElement {
 
   render() {
     return this.track
-      ? html`<stemplayer-js max-height=${ifDefined(this.maxHeight)}>
+      ? html`<stemplayer-js>
           ${this.controls || this.collapsed !== undefined
             ? html`<stemplayer-js-controls
                 slot="header"
