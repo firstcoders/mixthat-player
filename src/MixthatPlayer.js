@@ -58,7 +58,7 @@ export class MixthatPlayer extends LitElement {
       },
     },
     collapsed: { type: Boolean },
-    noAnalytics: { type: Boolean },
+    noAnalytics: { type: Boolean, attribute: 'no-analytics' },
     _isCreatingMix: { state: true },
   };
 

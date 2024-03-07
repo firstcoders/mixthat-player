@@ -33,17 +33,9 @@
       const src =
         'https://d18906zu98mq5t.cloudfront.net/tracks/a26fab52-d905-4c6a-9699-8af03a9ca31f/stream?t=1709625601931';
 
-      const createMix = async () => {
-        const { url } = await document
-          .querySelector('mixthat-player')
-          .createMix('wav');
-
-        window.location.replace(url);
-      };
 
       render(
-        html`<mixthat-player collapsed controls .src=${src}></mixthat-player>
-          <button @click=${createMix}>Save as WAV</button>`,
+        html`<mixthat-player no-analytics controls="toggle:stems download:mix" .src=${src}></mixthat-player>`,
         document.querySelector('#demo')
       );
     </script>
