@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.2-beta.4](https://github.com/sound-ws/mixthat-player/compare/@soundws/mixthat-player@3.1.2-beta.3...@soundws/mixthat-player@3.1.2-beta.4) (2024-03-07)
+
+
+### Bug Fixes
+
+* **mixthat-player:** fix for end padding ([9b390d1](https://github.com/sound-ws/mixthat-player/commit/9b390d1a028c86920a6e27bd6dc09b1a1bfc39b5))
+
+
+
+
+
 ## [3.1.2-beta.3](https://github.com/sound-ws/mixthat-player/compare/@soundws/mixthat-player@3.1.2-beta.2...@soundws/mixthat-player@3.1.2-beta.3) (2024-03-07)
 
 **Note:** Version bump only for package @soundws/mixthat-player
