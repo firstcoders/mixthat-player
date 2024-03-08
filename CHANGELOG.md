@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.2-beta.5](https://github.com/sound-ws/mixthat-player/compare/@soundws/mixthat-player@3.1.2-beta.4...@soundws/mixthat-player@3.1.2-beta.5) (2024-03-08)
+
+
+### Bug Fixes
+
+* **mixthat-player:** fixed no-analytics ([319852b](https://github.com/sound-ws/mixthat-player/commit/319852b3c731c622b5aaad8162ade28cef3676e8))
+
+
+
+
+
 ## [3.1.2-beta.4](https://github.com/sound-ws/mixthat-player/compare/@soundws/mixthat-player@3.1.2-beta.3...@soundws/mixthat-player@3.1.2-beta.4) (2024-03-07)
 
 
