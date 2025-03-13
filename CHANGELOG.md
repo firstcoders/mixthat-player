@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 4.0.0-beta.1 (2025-03-13)
+
+**Note:** Version bump only for package @firstcoders/mixthat-player
+
+
+
+
+
 # [4.0.0-beta.0](https://github.com/firstcoders/mixthat-player/compare/@firstcoders/mixthat-player@3.1.6-beta.8...@firstcoders/mixthat-player@4.0.0-beta.0) (2025-01-02)
 
 
