@@ -1,0 +1,59 @@
+name: Publish
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'Type of release'
+        required: true
+        default: 'prerelease'
+        type: choice
+        options:
+          - prerelease
+          - release
+
+jobs:
+  publish:
+    # if: github.event.pull_request.merged == true
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 'Use NodeJS 18'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install latest Yarn
+        run: corepack enable yarn && yarn set version berry
+
+      # https://dev.to/mpocock1/how-to-cache-nodemodules-in-github-actions-with-yarn-24eh
+      - uses: actions/cache@v4
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('yarn.lock') }}
+
+      - name: 'Install dependencies'
+        run: yarn install
+
+      - name: 'Version and publish'
+        env:
+          GH_TOKEN: ${{ secrets.API_TOKEN_GITHUB }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor}}@users.noreply.github.com"
+
+          if [ ${{ github.event.inputs.release_type }} = release ]; then
+            npx lerna version -m "chore: publish" --conventional-commits --conventional-graduate --yes
+          else
+            npx lerna version -m "chore: publish" --conventional-commits --conventional-prerelease --preid beta --yes
+          fi
+
+          npx lerna publish from-package --yes --registry https://registry.npmjs.org/

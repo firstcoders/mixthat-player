@@ -70,16 +70,8 @@ export default [
 
   {
     input: 'entry.js',
-    watch: {
-      include: 'src/**',
-    },
-    output: [
-      {
-        file: 'dist/element.js',
-        format: 'es',
-        sourcemap: true,
-      },
-    ],
+    watch: { include: 'src/**' },
+    output: [{ file: 'dist/index.js', format: 'es', sourcemap: true }],
     preserveSymlinks: true,
     plugins: [
       resolve(),
