@@ -24,7 +24,7 @@
     "start": "web-dev-server",
     "lint": "eslint --ext .js,.html . --ignore-path .gitignore && prettier \"**/*.js\" --check --ignore-path .gitignore",
     "format": "eslint --ext .js,.html . --fix --ignore-path .gitignore && prettier \"**/*.js\" --write --ignore-path .gitignore",
-    "test:disabled": "web-test-runner --coverage",
+    "test": "web-test-runner --coverage",
     "test:watch": "web-test-runner --watch",
     "build:dist": "rm -rf dist/ && mkdir dist/ && NODE_ENV=production rollup -c rollup.config.mjs",
     "build:dev": "rm -rf dist/ && mkdir dist/ && NODE_ENV=development rollup -c rollup.config.mjs",
@@ -76,5 +76,5 @@
       "prettier --write"
     ]
   },
-  "packageManager": "yarn@1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447"
+  "packageManager": "yarn@4.7.0"
 }

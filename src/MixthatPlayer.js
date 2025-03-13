@@ -1,11 +1,7 @@
 import { html, css, LitElement } from 'lit';
-import gridStyles from '@firstcoders/element-styles/grid.js';
-import animationStyles from '@firstcoders/element-styles/animate.js';
 
 export class MixthatPlayer extends LitElement {
   static styles = [
-    gridStyles,
-    animationStyles,
     css`
       :host {
         display: block;
