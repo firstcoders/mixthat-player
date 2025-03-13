@@ -29,7 +29,8 @@
     "build:dist": "rm -rf dist/ && mkdir dist/ && NODE_ENV=production rollup -c rollup.config.mjs",
     "build:dev": "rm -rf dist/ && mkdir dist/ && NODE_ENV=development rollup -c rollup.config.mjs",
     "build": "npm run build:dist",
-    "deploy": "aws s3 sync dist/ s3://$BUCKET_NAME/packages/@firstcoders/mixthat-player-$npm_package_version/ --cache-control max-age=2592000"
+    "deploy": "aws s3 sync dist/ s3://$BUCKET_NAME/packages/@firstcoders/mixthat-player-$npm_package_version/ --cache-control max-age=2592000",
+    "prepublishOnly": "npm run build:dist"
   },
   "dependencies": {
     "@stemplayer-js/stemplayer-js": "4.0.0-beta.1",
@@ -76,5 +77,6 @@
       "prettier --write"
     ]
   },
-  "packageManager": "yarn@4.7.0"
+  "packageManager": "yarn@4.7.0",
+  "gitHead": "73a3f6d1c689e85e9d370764c80ab256d178127b"
 }
