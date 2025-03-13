@@ -24,7 +24,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 'Use NodeJS 18'
+      - name: 'Use NodeJS 20'
         uses: actions/setup-node@v4
         with:
           node-version: 20
