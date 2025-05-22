@@ -337,7 +337,7 @@ __metadata:
     "@open-wc/eslint-config": "npm:^12.0.3"
     "@open-wc/testing": "npm:^4.0.0"
     "@rollup/plugin-node-resolve": "npm:^15.2.3"
-    "@stemplayer-js/stemplayer-js": "npm:4.0.0-beta.1"
+    "@stemplayer-js/stemplayer-js": "npm:^4.0.0-beta.2"
     "@web/dev-server": "npm:^0.4.5"
     "@web/test-runner": "npm:^0.18.2"
     eslint: "npm:^8.57.0"
@@ -1022,9 +1022,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stemplayer-js/stemplayer-js@npm:4.0.0-beta.1":
-  version: 4.0.0-beta.1
-  resolution: "@stemplayer-js/stemplayer-js@npm:4.0.0-beta.1"
+"@stemplayer-js/stemplayer-js@npm:^4.0.0-beta.2":
+  version: 4.0.0-beta.2
+  resolution: "@stemplayer-js/stemplayer-js@npm:4.0.0-beta.2"
   dependencies:
     "@firstcoders/hls-web-audio": "npm:^2.5.0-beta.3"
     "@firstcoders/loader-element": "npm:^1.0.0-beta.1"
@@ -1034,7 +1034,7 @@ __metadata:
     "@firstcoders/slider-element": "npm:^1.0.0-beta.1"
     "@firstcoders/waveform-element": "npm:^1.0.0-beta.1"
     lit: "npm:^3.2.1"
-  checksum: 10c0/ca4dc24d79068b0af6723c8945caf4b9f10dae53c0b22a85f565630473488858da160b9f92e044f41dbb2c0f05d6f4a3df848aec2cc3244cb90bbb85fbfadee0
+  checksum: 10c0/3379bbb3455610ce0a84faff2a6a4f4fc3c7d30bcdd5dd8bdb1664931cb8e5caeaf6437a10ee972a0288a0686923531b818cb81c07fe6c8a0623045074815225
   languageName: node
   linkType: hard
 
