@@ -78,6 +78,6 @@
       "prettier --write"
     ]
   },
-  "packageManager": "yarn@4.7.0",
+  "packageManager": "yarn@4.9.1",
   "gitHead": "73a3f6d1c689e85e9d370764c80ab256d178127b"
 }
