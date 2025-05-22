@@ -34,9 +34,16 @@ export class MixthatPlayer extends LitElement {
       converter: {
         fromAttribute: value => {
           if (value === '') {
-            return 'controls';
+            return [
+              'playpause',
+              'loop',
+              'progress',
+              'duration',
+              'time',
+              'zoom',
+            ];
           }
-          return value;
+          return value.split(' ');
         },
       },
     },
