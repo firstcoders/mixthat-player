@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-beta.3](https://github.com/firstcoders/mixthat-player/compare/@firstcoders/mixthat-player@4.0.0-beta.2...@firstcoders/mixthat-player@4.0.0-beta.3) (2025-05-22)
+
+
+### Bug Fixes
+
+* always return an array from attribute converter ([4927640](https://github.com/firstcoders/mixthat-player/commit/492764050fc338e22f2e6b2483fe8120f68a8b1a))
+
+
+
+
+
 # [4.0.0-beta.2](https://github.com/firstcoders/mixthat-player/compare/@firstcoders/mixthat-player@4.0.0-beta.1...@firstcoders/mixthat-player@4.0.0-beta.2) (2025-03-13)
 
 **Note:** Version bump only for package @firstcoders/mixthat-player

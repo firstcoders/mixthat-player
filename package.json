@@ -3,7 +3,7 @@
   "description": "Webcomponent mixthat-player following open-wc recommendations",
   "license": "MIT",
   "author": "The First Coders Team (https://www.firstcoders.co.uk)",
-  "version": "4.0.0-beta.2",
+  "version": "4.0.0-beta.3",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
