@@ -79,8 +79,8 @@ export class MixthatPlayer extends LitElement {
       this.isLoading = true;
       this.track = await this.getTrack();
 
-      // if (this.canDownload) this.controls.push('download');
-      // else this.controls.push('download:disabled');
+      if (this.canDownload) this.controls.push('download');
+      else this.controls.push('download:disabled');
 
       // this.record('PLAY_MIX', {
       //   origin,
@@ -248,6 +248,12 @@ export class MixthatPlayer extends LitElement {
   }
 
   get canDownload() {
+    if (!this.track) return false;
+
+    // if the track is public, we can note download it since we require a track token
+    if (this.track.is_public) return false;
+
+    // if there are no files without a source link, we can download it
     const fileWithoutSource = this.track.files.find(f => {
       const hasSource = f.$links.find(l => l.rel === 'source');
       return !hasSource;
