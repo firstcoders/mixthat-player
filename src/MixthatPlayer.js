@@ -56,7 +56,6 @@ export class MixthatPlayer extends LitElement {
         },
       },
     },
-    collapsed: { type: Boolean },
   };
 
   constructor() {
@@ -87,9 +86,6 @@ export class MixthatPlayer extends LitElement {
     try {
       this.isLoading = true;
       this.track = await this.getTrack();
-
-      if (this.canDownload) this.controls.push('download');
-      else this.controls.push('download:disabled');
 
       // this.record('PLAY_MIX', {
       //   origin,
@@ -123,43 +119,24 @@ export class MixthatPlayer extends LitElement {
     return this.track
       ? html`<stemplayer-js regions>
           <stemplayer-js-controls
-            slot="footer"
+            slot="header"
             label="${this.track.label}"
             controls="${this.controls.join(' ')}"
-            @controls:download="${this.handleDownloadClick}"
           >
-            <button slot="end" @click=${this.handleToggleStems} class="w3">
-              <span class="badge">${this.collapsed ? 'Stems' : 'Mix'}</span>
-            </button>
           </stemplayer-js-controls>
-          ${this.collapsed
-            ? html`${this.track.files
-                .filter(file => file.type === 'MIX')
-                .map(
-                  file =>
-                    html`<stemplayer-js-stem
-                      .id=${file.file_id}
-                      label="${file.label}"
-                      src="${file.$links.find(l => l.rel === 'm3u8').href}"
-                      waveform="${file.$links.find(l => l.rel === 'waveform')
-                        .href}"
-                    >
-                    </stemplayer-js-stem>`,
-                )}`
-            : html`${this.track.files
-                .filter(file => file.type === 'STEM')
-                .sort((a, b) => (a.index < b.index ? -1 : 1))
-                .map(
-                  file =>
-                    html`<stemplayer-js-stem
-                      .id=${file.file_id}
-                      label="${file.label}"
-                      src="${file.$links.find(l => l.rel === 'm3u8').href}"
-                      waveform="${file.$links.find(l => l.rel === 'waveform')
-                        .href}"
-                    >
-                    </stemplayer-js-stem>`,
-                )}`}
+          ${this.track.files
+            .filter(file => file.type === 'STEM')
+            .sort((a, b) => (a.index < b.index ? -1 : 1))
+            .map(
+              file =>
+                html`<stemplayer-js-stem
+                  .id=${file.file_id}
+                  label="${file.label}"
+                  src="${file.$links.find(l => l.rel === 'm3u8').href}"
+                  waveform="${file.$links.find(l => l.rel === 'waveform').href}"
+                >
+                </stemplayer-js-stem>`,
+            )}
           ${this.webUrl
             ? html`<a
                 slot="footer"
@@ -194,47 +171,5 @@ export class MixthatPlayer extends LitElement {
     ].filter(e => !!e);
 
     return `${url.origin}/tracks/${this.track.track_id}${parts.length ? `?${parts.join('&')}` : ''}`;
-  }
-
-  get canDownload() {
-    if (!this.track) return false;
-
-    // if the track is public, we can note download it since we require a track token
-    if (this.track.is_public) return false;
-
-    // if there are no files without a source link, we can download it
-    const fileWithoutSource = this.track.files.find(f => {
-      const hasSource = f.$links.find(l => l.rel === 'source');
-      return !hasSource;
-    });
-
-    return !fileWithoutSource;
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  handleDownloadClick() {
-    console.warn(
-      'Download functionality is not implemented yet. Please use the MixThat! web interface.',
-    );
-    // const { state } = this.player;
-    // console.log(state);
-    // const encodedState = btoa(
-    //   JSON.stringify({
-    //     ...state,
-    //     stems: state.stems.map(stem => ({
-    //       ...stem,
-    //       src: undefined,
-    //       waveform: undefined,
-    //     })),
-    //   }),
-    // );
-    // const url = new URL(this.webUrl);
-    // url.searchParams.set('download', true);
-    // url.searchParams.set('state', encodedState);
-    // window.open(url.toString(), '_blank');
-  }
-
-  handleToggleStems() {
-    this.collapsed = !this.collapsed;
   }
 }

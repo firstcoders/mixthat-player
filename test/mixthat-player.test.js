@@ -125,29 +125,4 @@ describe('MixthatPlayer', () => {
       'https://api.example.com/tracks/123?auth_token=abc123',
     );
   });
-
-  it('determines download capability based on source links', async () => {
-    const mockTrack = {
-      files: [
-        {
-          $links: [{ rel: 'source', href: 'test.mp3' }],
-        },
-      ],
-    };
-
-    fetchStub.resolves({
-      ok: true,
-      json: () => Promise.resolve(mockTrack),
-    });
-
-    el = await fixture(
-      html`<mixthat-player
-        src="https://api.example.com/tracks/123"
-      ></mixthat-player>`,
-    );
-
-    await waitUntil(() => el.track);
-
-    expect(el.canDownload).to.be.true;
-  });
 });
