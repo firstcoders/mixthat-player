@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-beta.5](https://github.com/firstcoders/mixthat-player/compare/@firstcoders/mixthat-player@4.0.0-beta.4...@firstcoders/mixthat-player@4.0.0-beta.5) (2025-07-31)
+
+
+### Bug Fixes
+
+* do not enable download button for public tracks ([3e7ed90](https://github.com/firstcoders/mixthat-player/commit/3e7ed90beca115a64134395e242ba845a98cd7b8))
+
+
+
+
+
 # [4.0.0-beta.4](https://github.com/firstcoders/mixthat-player/compare/@firstcoders/mixthat-player@4.0.0-beta.3...@firstcoders/mixthat-player@4.0.0-beta.4) (2025-05-22)
 
 **Note:** Version bump only for package @firstcoders/mixthat-player
