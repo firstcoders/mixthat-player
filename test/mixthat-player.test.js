@@ -44,7 +44,6 @@ describe('MixthatPlayer', () => {
     const mockTrack = {
       label: 'Test Track',
       track_id: '123',
-      is_public: true,
       files: [
         {
           type: 'STEM',
@@ -95,10 +94,10 @@ describe('MixthatPlayer', () => {
     expect(el.isLoading).to.be.false;
   });
 
-  it('extracts token from src URL', async () => {
+  it('extracts auth_token from src URL', async () => {
     el = await fixture(
       html`<mixthat-player
-        src="https://api.example.com/tracks/123?token=abc123"
+        src="https://api.example.com/tracks/123?auth_token=abc123"
       ></mixthat-player>`,
     );
     expect(el.token).to.equal('abc123');
@@ -107,7 +106,6 @@ describe('MixthatPlayer', () => {
   it('generates correct webUrl', async () => {
     const mockTrack = {
       track_id: '123',
-      is_public: true,
     };
 
     fetchStub.resolves({
@@ -117,14 +115,14 @@ describe('MixthatPlayer', () => {
 
     el = await fixture(
       html`<mixthat-player
-        src="https://api.example.com/tracks/123?token=abc123"
+        src="https://api.example.com/tracks/123?auth_token=abc123"
       ></mixthat-player>`,
     );
 
     await waitUntil(() => el.track);
 
     expect(el.webUrl).to.equal(
-      'https://api.example.com/tracks/123?token=abc123&is_public=1',
+      'https://api.example.com/tracks/123?auth_token=abc123',
     );
   });
 

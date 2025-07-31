@@ -21,6 +21,15 @@ export class MixthatPlayer extends LitElement {
       .zTop {
         z-index: 999999;
       }
+      button {
+        background: transparent;
+        color: var(--sws-stemsplayer-color, #fff);
+        border: none;
+        opacity: 0.8;
+      }
+      .w3 {
+        width: 4rem;
+      }
     `,
   ];
 
@@ -102,9 +111,10 @@ export class MixthatPlayer extends LitElement {
     const url = new URL(this._src);
     const { token } = this;
 
-    const response = await fetch(`${url.origin}${url.pathname}`, {
+    const response = await fetch(`${url.origin}${url.pathname}?v=1`, {
       headers: { ...(token ? { Authorization: token } : {}) },
     });
+
     if (!response.ok) throw new Error('Failed loading track');
     return response.json();
   }
@@ -113,25 +123,43 @@ export class MixthatPlayer extends LitElement {
     return this.track
       ? html`<stemplayer-js regions>
           <stemplayer-js-controls
-            slot="header"
+            slot="footer"
             label="${this.track.label}"
             controls="${this.controls.join(' ')}"
+            @controls:download="${this.handleDownloadClick}"
           >
+            <button slot="end" @click=${this.handleToggleStems} class="w3">
+              <span class="badge">${this.collapsed ? 'Stems' : 'Mix'}</span>
+            </button>
           </stemplayer-js-controls>
-          ${this.track.files
-            .filter(file => file.type === 'STEM')
-            .sort((a, b) => (a.index < b.index ? -1 : 1))
-            .map(
-              file =>
-                html`<stemplayer-js-stem
-                  .id=${file.file_id}
-                  label="${file.label}"
-                  src="${file.$links.find(l => l.rel === 'm3u8').href}"
-                  waveform="${file.$links.find(l => l.rel === 'waveform').href}"
-                  style="${this.collapsed ? 'display:none' : ''}"
-                >
-                </stemplayer-js-stem>`,
-            )}
+          ${this.collapsed
+            ? html`${this.track.files
+                .filter(file => file.type === 'MIX')
+                .map(
+                  file =>
+                    html`<stemplayer-js-stem
+                      .id=${file.file_id}
+                      label="${file.label}"
+                      src="${file.$links.find(l => l.rel === 'm3u8').href}"
+                      waveform="${file.$links.find(l => l.rel === 'waveform')
+                        .href}"
+                    >
+                    </stemplayer-js-stem>`,
+                )}`
+            : html`${this.track.files
+                .filter(file => file.type === 'STEM')
+                .sort((a, b) => (a.index < b.index ? -1 : 1))
+                .map(
+                  file =>
+                    html`<stemplayer-js-stem
+                      .id=${file.file_id}
+                      label="${file.label}"
+                      src="${file.$links.find(l => l.rel === 'm3u8').href}"
+                      waveform="${file.$links.find(l => l.rel === 'waveform')
+                        .href}"
+                    >
+                    </stemplayer-js-stem>`,
+                )}`}
           ${this.webUrl
             ? html`<a
                 slot="footer"
@@ -145,71 +173,6 @@ export class MixthatPlayer extends LitElement {
       : '';
   }
 
-  // async createMix(format) {
-  //   if (!this.track) throw new Error('Track not loaded: cannot download');
-
-  //   const { state } = this.player;
-
-  //   try {
-  //     this._isCreatingMix = true;
-
-  //     const response = await fetch(this.track.downloadMixUrl, {
-  //       method: 'POST',
-  //       headers: {
-  //         Accept: 'application/json',
-  //         'Content-Type': 'application/json',
-  //         ...(this.authToken
-  //           ? { Authorization: `Bearer ${this.authToken}` }
-  //           : {}),
-  //       },
-  //       body: JSON.stringify({
-  //         format,
-  //         stems: state.stems.map(({ id, volume }) => ({
-  //           id,
-  //           volume,
-  //         })),
-  //       }),
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error('Failed to Create Mix');
-  //     }
-  //     const { _url } = await response.json();
-  //     const { url } = await this.poll(_url);
-
-  //     this.dispatchEvent(new CustomEvent('mix:ready', { detail: { url } }));
-  //   } finally {
-  //     this._isCreatingMix = false;
-  //   }
-  // }
-
-  /**
-   * Poll the status endpoint until the job is ready
-   * @param {src} src
-   * @returns {Object} Object containing a url to the generated file
-   */
-  // async poll(src) {
-  //   const response = await fetch(src);
-
-  //   // check if the job succeeded
-  //   if (!response.ok) throw new Error('Failed to create mix');
-
-  //   const { job, _url } = await response.json();
-
-  //   if (job.status === 'STATUS_QUEUED' || job.status === 'STATUS_PROCESSING') {
-  //     // wait for a bit
-  //     await new Promise(done => {
-  //       setTimeout(() => done(), 2500);
-  //     });
-
-  //     return this.poll(src);
-  //   }
-
-  //   if (job.status === 'STATUS_SUCCESS') return { url: _url };
-
-  //   throw Error('Failed to create mix');
-  // }
-
   get player() {
     return this.shadowRoot.querySelector('stemplayer-js');
   }
@@ -217,22 +180,8 @@ export class MixthatPlayer extends LitElement {
   get token() {
     if (!this.src) return undefined;
 
-    return new URL(this.src).searchParams.get('token');
+    return new URL(this.src).searchParams.get('auth_token');
   }
-
-  // record(event, data) {
-  //   if (!this.noAnalytics) {
-  //     setTimeout(() => {
-  //       fetch(`${new URL(this.src).origin}/activity`, {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify({ event, timestamp: Date.now(), data }),
-  //       });
-  //     }, 1000);
-  //   }
-  // }
 
   get webUrl() {
     if (!this.src) return undefined;
@@ -240,7 +189,7 @@ export class MixthatPlayer extends LitElement {
     const url = new URL(this.src);
 
     const parts = [
-      this.token ? `token=${this.token}` : undefined,
+      this.token ? `auth_token=${this.token}` : undefined,
       this.track.is_public ? 'is_public=1' : undefined,
     ].filter(e => !!e);
 
@@ -260,5 +209,32 @@ export class MixthatPlayer extends LitElement {
     });
 
     return !fileWithoutSource;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  handleDownloadClick() {
+    console.warn(
+      'Download functionality is not implemented yet. Please use the MixThat! web interface.',
+    );
+    // const { state } = this.player;
+    // console.log(state);
+    // const encodedState = btoa(
+    //   JSON.stringify({
+    //     ...state,
+    //     stems: state.stems.map(stem => ({
+    //       ...stem,
+    //       src: undefined,
+    //       waveform: undefined,
+    //     })),
+    //   }),
+    // );
+    // const url = new URL(this.webUrl);
+    // url.searchParams.set('download', true);
+    // url.searchParams.set('state', encodedState);
+    // window.open(url.toString(), '_blank');
+  }
+
+  handleToggleStems() {
+    this.collapsed = !this.collapsed;
   }
 }
